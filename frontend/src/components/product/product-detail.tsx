@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CompareButton } from "@/components/compare/compare-button";
 import { ProductImage } from "@/components/product/product-image";
 import { QueryError } from "@/components/feedback/query-state";
 import { Badge } from "@/components/ui/badge";
@@ -62,33 +63,36 @@ export function ProductDetail({ id }: { id: string }) {
           </div>
         ) : null}
         <p className="text-sm leading-6">{item.description}</p>
-        <form
-          className="flex flex-wrap items-end gap-2"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (!item.inStock || !quantityIsValid || addToCart.isPending) return;
-            addToCart.mutate({ productId: item.id, quantity });
-          }}
-        >
-          <div className="flex flex-col gap-1">
-            <label htmlFor="quantity" className="text-sm font-medium">
-              Quantity
-            </label>
-            <Input
-              id="quantity"
-              type="number"
-              min={1}
-              max={99}
-              value={quantity}
-              disabled={!item.inStock || addToCart.isPending}
-              onChange={(event) => setQuantity(event.target.valueAsNumber)}
-              className="w-24"
-            />
-          </div>
-          <Button type="submit" disabled={!item.inStock || !quantityIsValid || addToCart.isPending}>
-            {item.inStock ? (addToCart.isPending ? "Adding…" : "Add to cart") : "Out of stock"}
-          </Button>
-        </form>
+        <div className="flex flex-wrap items-end gap-2">
+          <form
+            className="flex flex-wrap items-end gap-2"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (!item.inStock || !quantityIsValid || addToCart.isPending) return;
+              addToCart.mutate({ productId: item.id, quantity });
+            }}
+          >
+            <div className="flex flex-col gap-1">
+              <label htmlFor="quantity" className="text-sm font-medium">
+                Quantity
+              </label>
+              <Input
+                id="quantity"
+                type="number"
+                min={1}
+                max={99}
+                value={quantity}
+                disabled={!item.inStock || addToCart.isPending}
+                onChange={(event) => setQuantity(event.target.valueAsNumber)}
+                className="w-24"
+              />
+            </div>
+            <Button type="submit" disabled={!item.inStock || !quantityIsValid || addToCart.isPending}>
+              {item.inStock ? (addToCart.isPending ? "Adding…" : "Add to cart") : "Out of stock"}
+            </Button>
+          </form>
+          <CompareButton productId={item.id} />
+        </div>
         {addToCart.isError ? (
           <p className="text-sm text-destructive">{errorMessage(addToCart.error)}</p>
         ) : null}

@@ -13,7 +13,7 @@ export class DiscoveryController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Match headphones from structured answers' })
   @ApiOkResponse({ type: DiscoveryResponseDto })
-  @ApiBadRequestResponse({ description: 'Invalid priority or budget' })
+  @ApiBadRequestResponse({ description: 'Invalid use case, priority, or budget' })
   match(@Body() body: MatchDiscoveryDto): Promise<DiscoveryResponseDto> {
     return this.runGuidedDiscovery.execute(body);
   }

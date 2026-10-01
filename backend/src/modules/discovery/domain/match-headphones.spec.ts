@@ -10,6 +10,7 @@ const headphones = [
     reviewCount: 4102,
     noiseCancellation: true,
     batteryHours: 60,
+    useCases: ['work', 'travel'],
   }),
   headphone({
     slug: 'sony-inzone-h9',
@@ -19,6 +20,7 @@ const headphones = [
     reviewCount: 1876,
     noiseCancellation: true,
     batteryHours: 32,
+    useCases: ['gaming'],
   }),
   headphone({
     slug: 'sony-wh-1000xm5',
@@ -28,6 +30,7 @@ const headphones = [
     reviewCount: 18420,
     noiseCancellation: true,
     batteryHours: 30,
+    useCases: ['travel', 'work'],
   }),
   headphone({
     slug: 'bose-quietcomfort-ultra',
@@ -37,6 +40,7 @@ const headphones = [
     reviewCount: 9320,
     noiseCancellation: true,
     batteryHours: 24,
+    useCases: ['travel', 'work'],
   }),
   headphone({
     slug: 'apple-airpods-pro-2',
@@ -46,6 +50,7 @@ const headphones = [
     reviewCount: 42110,
     noiseCancellation: true,
     batteryHours: 6,
+    useCases: ['travel', 'fitness'],
   }),
   headphone({
     slug: 'anker-soundcore-space-q45',
@@ -55,6 +60,7 @@ const headphones = [
     reviewCount: 22140,
     noiseCancellation: true,
     batteryHours: 50,
+    useCases: ['travel', 'work'],
   }),
   headphone({
     slug: 'jbl-tune-510bt',
@@ -64,30 +70,33 @@ const headphones = [
     reviewCount: 15680,
     noiseCancellation: false,
     batteryHours: 40,
+    useCases: ['work', 'fitness'],
   }),
 ];
 
 describe('matchHeadphones', () => {
-  it('returns the longest-battery headphones inside $200+ and drops a short-battery match', () => {
+  it('returns the longest-battery work headphones inside $200+ and drops a poor match', () => {
     const matches = matchHeadphones(headphones, {
+      useCase: 'work',
       priority: 'battery',
       budget: '200_plus',
     });
 
     expect(matches.map((match) => match.product.name)).toEqual([
       'Sennheiser Momentum 4 Wireless',
-      'Sony INZONE H9',
       'Sony WH-1000XM5',
       'Bose QuietComfort Ultra Headphones',
     ]);
+    expect(matches.map((match) => match.product.slug)).not.toContain('sony-inzone-h9');
     expect(matches.map((match) => match.product.slug)).not.toContain('apple-airpods-pro-2');
     expect(matches[0]?.reason).toBe(
-      '60-hour battery. Price is $349.95, inside the $200+ budget.',
+      'Listed for work. 60-hour battery. Price is $349.95, inside the $200+ budget.',
     );
   });
 
-  it('returns no matches when noise cancellation excludes the only under-$100 headphone', () => {
+  it('returns no matches when noise cancellation excludes the only under-$100 work headphone', () => {
     const matches = matchHeadphones(headphones, {
+      useCase: 'work',
       priority: 'noise_cancellation',
       budget: 'under_100',
     });
@@ -104,6 +113,7 @@ function headphone(input: {
   reviewCount: number;
   noiseCancellation: boolean;
   batteryHours: number;
+  useCases: string[];
 }): ProductRecord {
   return {
     id: input.slug,
@@ -125,6 +135,12 @@ function headphone(input: {
     },
     features: [],
     attributes: [
+      ...input.useCases.map((useCase) => ({
+        key: 'use_case',
+        stringValue: useCase,
+        numberValue: null,
+        booleanValue: null,
+      })),
       {
         key: 'noise_cancellation',
         stringValue: null,

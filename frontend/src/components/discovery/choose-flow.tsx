@@ -14,7 +14,15 @@ import {
   type DiscoveryAnswers,
   type DiscoveryBudget,
   type DiscoveryPriority,
+  type DiscoveryUseCase,
 } from "@/lib/api/discovery";
+
+const USE_CASES: { value: DiscoveryUseCase; label: string }[] = [
+  { value: "travel", label: "Travel" },
+  { value: "work", label: "Work" },
+  { value: "gaming", label: "Gaming" },
+  { value: "fitness", label: "Fitness" },
+];
 
 const PRIORITIES: { value: DiscoveryPriority; label: string }[] = [
   { value: "noise_cancellation", label: "Noise cancellation" },
@@ -32,16 +40,19 @@ export function ChooseFlow() {
   const params = useSearchParams();
   const urlAnswers = parseDiscoveryAnswers(params);
   const discovery = useGuidedDiscovery(urlAnswers);
-  const formKey = urlAnswers ? `${urlAnswers.priority}:${urlAnswers.budget}` : "new";
+  const formKey = urlAnswers
+    ? `${urlAnswers.useCase}:${urlAnswers.priority}:${urlAnswers.budget}`
+    : "new";
 
   return (
     <div className="flex flex-col gap-8">
       <PageHeading
         title="Help me choose"
-        description="Two questions about headphones. Matches come from catalog attributes and price."
+        description="Three questions about headphones. Matches come from catalog attributes and price."
       />
       <ChooseForm
         key={formKey}
+        initialUseCase={urlAnswers?.useCase}
         initialPriority={urlAnswers?.priority}
         initialBudget={urlAnswers?.budget}
         matching={discovery.isFetching}
@@ -52,25 +63,29 @@ export function ChooseFlow() {
 }
 
 function ChooseForm({
+  initialUseCase,
   initialPriority,
   initialBudget,
   matching,
 }: {
+  initialUseCase: DiscoveryUseCase | undefined;
   initialPriority: DiscoveryPriority | undefined;
   initialBudget: DiscoveryBudget | undefined;
   matching: boolean;
 }) {
   const router = useRouter();
+  const [useCase, setUseCase] = useState(initialUseCase);
   const [priority, setPriority] = useState(initialPriority);
   const [budget, setBudget] = useState(initialBudget);
-  const ready = priority !== undefined && budget !== undefined;
+  const ready =
+    useCase !== undefined && priority !== undefined && budget !== undefined;
 
   function seeMatches() {
-    if (!priority || !budget) {
+    if (!useCase || !priority || !budget) {
       return;
     }
 
-    router.push(discoveryHref({ priority, budget }), { scroll: false });
+    router.push(discoveryHref({ useCase, priority, budget }), { scroll: false });
   }
 
   return (
@@ -81,6 +96,13 @@ function ChooseForm({
         seeMatches();
       }}
     >
+      <ChoiceGroup
+        legend="What are you buying for?"
+        name="useCase"
+        options={USE_CASES}
+        value={useCase}
+        onChange={setUseCase}
+      />
       <ChoiceGroup
         legend="What matters most?"
         name="priority"
@@ -112,7 +134,7 @@ function ChooseResults({
   if (!urlAnswers) {
     return (
       <p className="text-sm text-muted-foreground">
-        Answer both questions to see matches.
+        Answer all three questions to see matches.
       </p>
     );
   }
@@ -131,7 +153,7 @@ function ChooseResults({
     return (
       <EmptyState
         title="No headphones match"
-        description="Those answers do not match a headphone in the catalog. Try another priority or budget."
+        description="Those answers do not match a headphone in the catalog. Try another use, priority, or budget."
       />
     );
   }
@@ -170,7 +192,7 @@ function ChoiceGroup<T extends string>({
 }) {
   return (
     <fieldset className="flex flex-col gap-3">
-      <legend className="text-sm font-medium">{legend}</legend>
+      <legend className="text-base font-medium">{legend}</legend>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const selected = value === option.value;

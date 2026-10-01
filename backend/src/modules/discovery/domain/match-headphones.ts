@@ -1,12 +1,15 @@
 import type { ProductRecord } from '../../products/domain/product-search.js';
 
+export const DISCOVERY_USE_CASES = ['travel', 'work', 'gaming', 'fitness'] as const;
 export const DISCOVERY_PRIORITIES = ['noise_cancellation', 'battery', 'lower_price'] as const;
 export const DISCOVERY_BUDGETS = ['under_100', '100_200', '200_plus'] as const;
 
+export type DiscoveryUseCase = (typeof DISCOVERY_USE_CASES)[number];
 export type DiscoveryPriority = (typeof DISCOVERY_PRIORITIES)[number];
 export type DiscoveryBudget = (typeof DISCOVERY_BUDGETS)[number];
 
 export type DiscoveryAnswers = {
+  useCase: DiscoveryUseCase;
   priority: DiscoveryPriority;
   budget: DiscoveryBudget;
 };
@@ -23,7 +26,8 @@ export function matchHeadphones(
   products: ProductRecord[],
   answers: DiscoveryAnswers,
 ): HeadphoneMatch[] {
-  const inBudget = products.filter((product) => matchesBudget(product.priceCents, answers.budget));
+  const forUse = products.filter((product) => hasUseCase(product, answers.useCase));
+  const inBudget = forUse.filter((product) => matchesBudget(product.priceCents, answers.budget));
   const ranked = rank(inBudget, answers.priority).slice(0, MATCH_LIMIT);
 
   return ranked.map((product) => ({
@@ -77,20 +81,27 @@ function rank(products: ProductRecord[], priority: DiscoveryPriority): ProductRe
   });
 }
 
+function hasUseCase(product: ProductRecord, useCase: DiscoveryUseCase): boolean {
+  return product.attributes.some(
+    (attribute) => attribute.key === 'use_case' && attribute.stringValue === useCase,
+  );
+}
+
 function matchReason(product: ProductRecord, answers: DiscoveryAnswers): string {
   const price = formatPrice(product.priceCents);
   const budget = budgetLabel(answers.budget);
+  const listed = `Listed for ${answers.useCase}. `;
 
   if (answers.priority === 'noise_cancellation') {
-    return `Noise cancellation is listed as yes. Price is ${price}, inside the ${budget} budget.`;
+    return `${listed}Noise cancellation is listed as yes. Price is ${price}, inside the ${budget} budget.`;
   }
 
   if (answers.priority === 'battery') {
     const hours = numberAttribute(product, 'battery_hours') ?? 0;
-    return `${formatHours(hours)} battery. Price is ${price}, inside the ${budget} budget.`;
+    return `${listed}${formatHours(hours)} battery. Price is ${price}, inside the ${budget} budget.`;
   }
 
-  return `Price is ${price}, among the lower prices in the ${budget} range.`;
+  return `${listed}Price is ${price}, among the lower prices in the ${budget} range.`;
 }
 
 function budgetLabel(budget: DiscoveryBudget): string {

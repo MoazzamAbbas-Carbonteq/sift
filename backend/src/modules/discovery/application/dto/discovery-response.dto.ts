@@ -6,7 +6,7 @@ export class DiscoveryMatchDto {
   product: ProductSummaryDto;
 
   @ApiProperty({
-    example: '60-hour battery. Price is $349.95, inside the $200+ budget.',
+    example: 'Listed for work. 60-hour battery. Price is $349.95, inside the $200+ budget.',
   })
   reason: string;
 }

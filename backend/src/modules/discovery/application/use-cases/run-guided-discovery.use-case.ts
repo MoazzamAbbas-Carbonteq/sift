@@ -21,6 +21,7 @@ export class RunGuidedDiscoveryUseCase {
   async execute(input: MatchDiscoveryDto): Promise<DiscoveryResponseDto> {
     const products = await this.products.findByCategorySlug(HEADPHONES);
     const matches = matchHeadphones(products, {
+      useCase: input.useCase,
       priority: input.priority,
       budget: input.budget,
     });

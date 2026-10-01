@@ -23,6 +23,12 @@ const jbl: ProductRecord = {
   features: [{ label: 'Under $50', sortOrder: 0 }],
   attributes: [
     {
+      key: 'use_case',
+      stringValue: 'work',
+      numberValue: null,
+      booleanValue: null,
+    },
+    {
       key: 'noise_cancellation',
       stringValue: null,
       numberValue: null,
@@ -45,6 +51,7 @@ describe('RunGuidedDiscoveryUseCase', () => {
     const useCase = new RunGuidedDiscoveryUseCase(repository);
 
     const result = await useCase.execute({
+      useCase: 'work',
       priority: 'lower_price',
       budget: 'under_100',
     });
@@ -58,7 +65,7 @@ describe('RunGuidedDiscoveryUseCase', () => {
     });
     expect(result.matches[0]?.product).not.toHaveProperty('description');
     expect(result.matches[0]?.reason).toBe(
-      'Price is $49.95, among the lower prices in the under $100 range.',
+      'Listed for work. Price is $49.95, among the lower prices in the under $100 range.',
     );
   });
 });
