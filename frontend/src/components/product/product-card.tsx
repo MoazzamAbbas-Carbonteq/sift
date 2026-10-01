@@ -27,7 +27,10 @@ export function ProductCard({
 
   return (
     <Card className="h-full">
-      <Link href={`/products/${product.id}`} className="block">
+      <Link
+        href={`/products/${product.id}`}
+        className="block rounded-t-xl focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-ring/50 focus-visible:outline-none"
+      >
         <ProductImage
           src={product.imageUrl}
           alt={product.name}
@@ -38,7 +41,10 @@ export function ProductCard({
       <CardHeader>
         <p className="text-xs text-muted-foreground">{product.brand}</p>
         <CardTitle>
-          <Link href={`/products/${product.id}`} className="hover:underline">
+          <Link
+            href={`/products/${product.id}`}
+            className="rounded-sm hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+          >
             {product.name}
           </Link>
         </CardTitle>

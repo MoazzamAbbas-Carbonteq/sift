@@ -7,7 +7,7 @@ import { PageHeading } from "@/components/layout/page-heading";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOrder } from "@/hooks/useOrders";
-import { formatCents } from "@/lib/format";
+import { formatCents, formatOrderDate } from "@/lib/format";
 
 export function OrderConfirmation({ id }: { id: string }) {
   const order = useOrder(id);
@@ -39,8 +39,12 @@ export function OrderConfirmation({ id }: { id: string }) {
         description="This confirmation uses the prices captured at purchase."
       />
       <div className="flex flex-col gap-4 rounded-xl bg-card p-4 ring-1 ring-foreground/10">
+        <div>
+          <h2 className="text-sm font-medium">Order number</h2>
+          <p className="text-sm break-all">{placed.id}</p>
+        </div>
         <p className="text-sm text-muted-foreground">
-          {new Date(placed.createdAt).toLocaleString()} · {placed.status}
+          {formatOrderDate(placed.createdAt)} · {placed.status}
         </p>
         <div>
           <h2 className="text-sm font-medium">Ship to</h2>
@@ -51,7 +55,10 @@ export function OrderConfirmation({ id }: { id: string }) {
           {placed.items.map((item) => (
             <li key={item.id} className="flex justify-between gap-4 text-sm">
               <span>
-                <Link href={`/products/${item.productId}`} className="hover:underline">
+                <Link
+                  href={`/products/${item.productId}`}
+                  className="rounded-sm hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                >
                   {item.productName}
                 </Link>
                 <span className="block text-muted-foreground">

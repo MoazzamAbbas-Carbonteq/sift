@@ -7,7 +7,10 @@ export function SiteHeader() {
   return (
     <header className="border-b">
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-3 px-4 py-3">
-        <Link href="/" className="text-lg font-semibold tracking-tight">
+        <Link
+          href="/"
+          className="rounded-lg text-lg font-semibold tracking-tight focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+        >
           Sift
         </Link>
         <Suspense fallback={<div className="h-8 min-w-0 flex-1" />}>

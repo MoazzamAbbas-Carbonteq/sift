@@ -63,7 +63,10 @@ export function CartView() {
                   sizes="80px"
                 />
                 <div className="flex min-w-0 flex-col gap-2">
-                  <Link href={`/products/${item.productId}`} className="font-medium hover:underline">
+                  <Link
+                    href={`/products/${item.productId}`}
+                    className="rounded-sm font-medium hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                  >
                     {item.name}
                   </Link>
                   <p className="text-sm text-muted-foreground">

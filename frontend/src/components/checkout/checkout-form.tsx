@@ -110,9 +110,7 @@ export function CheckoutForm() {
           </div>
           <section className="rounded-xl bg-card p-4 ring-1 ring-foreground/10">
             <h2 className="text-base font-medium">Payment</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Demo checkout. No payment is collected.
-            </p>
+            <p className="mt-1 text-sm text-muted-foreground">Card ending in 4242.</p>
           </section>
           {outOfStock ? (
             <p className="text-sm text-destructive">
