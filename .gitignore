@@ -9,3 +9,7 @@ coverage/
 .env
 .env.local
 .env.*.local
+
+# Local planning docs, kept out of main for now.
+PLAN.md
+SCHEMA.md
