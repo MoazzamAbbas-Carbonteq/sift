@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAddCartItem } from "@/hooks/useCart";
 import { useProduct } from "@/hooks/useProduct";
+import { listCatalogFacts, type AttributeValue } from "@/lib/catalog-facts";
 import { errorMessage, formatCents, formatCount, formatRating } from "@/lib/format";
 
 export function ProductDetail({ id }: { id: string }) {
@@ -94,9 +95,34 @@ export function ProductDetail({ id }: { id: string }) {
         {addToCart.isSuccess ? (
           <p className="text-sm text-muted-foreground">Added to cart.</p>
         ) : null}
+        <WhyThisProduct attributes={item.attributes} />
         <ReviewThemes summary={item.reviewSummary} />
       </div>
     </article>
+  );
+}
+
+function WhyThisProduct({ attributes }: { attributes: AttributeValue[] }) {
+  const facts = listCatalogFacts(attributes, 6);
+  if (facts.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="flex flex-col gap-3 border-t pt-4">
+      <h2 className="text-base font-medium">Why this product</h2>
+      <p className="text-sm text-muted-foreground">
+        Catalog facts from this listing. Not a personal recommendation or review research.
+      </p>
+      <ul className="flex flex-col gap-1">
+        {facts.map((fact) => (
+          <li key={fact.key} className="flex justify-between gap-4 text-sm">
+            <span>{fact.label}</span>
+            <span className="text-right text-muted-foreground">{fact.value}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

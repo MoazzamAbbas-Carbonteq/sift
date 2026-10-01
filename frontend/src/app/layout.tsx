@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { CompareTray } from "@/components/compare/compare-tray";
 import { Providers } from "@/components/providers";
 import { SiteHeader } from "@/components/layout/site-header";
 import { getQueryClient } from "@/lib/query-client";
@@ -30,7 +31,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Providers>
           <HydrationBoundary state={dehydrate(queryClient)}>
             <SiteHeader />
-            <main className="mx-auto w-full max-w-6xl px-4 py-8">{children}</main>
+            <main className="mx-auto w-full max-w-6xl px-4 py-8">
+              {children}
+              <CompareTray />
+            </main>
           </HydrationBoundary>
         </Providers>
       </body>

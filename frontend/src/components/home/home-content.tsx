@@ -18,13 +18,23 @@ export function HomeContent() {
     <div className="flex flex-col gap-10">
       <section className="flex flex-col gap-4">
         <h1 className="max-w-xl text-3xl font-semibold tracking-tight">
-          Find the right product faster
+          Find what fits.
         </h1>
         <p className="max-w-xl text-sm text-muted-foreground">
           Search a focused catalog, then narrow by price, rating, stock, and the details that matter for that category.
         </p>
-        <div className="max-w-xl">
+        <p className="max-w-xl text-sm text-muted-foreground">
+          Sift asks a few questions and returns a short list, so you spend less time in a long catalog.
+        </p>
+        <div className="flex max-w-xl flex-col gap-3">
           <SearchForm id="home-search" inputClassName="h-9" />
+          <Button
+            nativeButton={false}
+            className="w-fit"
+            render={<Link href="/choose" />}
+          >
+            Help me choose
+          </Button>
         </div>
       </section>
 

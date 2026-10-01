@@ -1,20 +1,24 @@
 "use client";
 
 import Link from "next/link";
+import { useCompare } from "@/components/compare/compare-selection";
 import { ProductImage } from "@/components/product/product-image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAddCartItem } from "@/hooks/useCart";
+import { MAX_COMPARE } from "@/lib/compare";
 import type { ProductSummary } from "@/lib/api/products";
 import { errorMessage, formatCents, formatCount, formatRating } from "@/lib/format";
 
 export function ProductCard({
   product,
   priority = false,
+  showCompare = false,
 }: {
   product: ProductSummary;
   priority?: boolean;
+  showCompare?: boolean;
 }) {
   const addToCart = useAddCartItem();
   const pending =
@@ -59,19 +63,42 @@ export function ProductCard({
             ))}
           </div>
         ) : null}
-        <Button
-          type="button"
-          disabled={!product.inStock || pending}
-          onClick={() =>
-            addToCart.mutate({ productId: product.id, quantity: 1 })
-          }
-        >
-          {product.inStock ? (pending ? "Adding…" : "Add to cart") : "Out of stock"}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            className="min-w-28 flex-1"
+            disabled={!product.inStock || pending}
+            onClick={() =>
+              addToCart.mutate({ productId: product.id, quantity: 1 })
+            }
+          >
+            {product.inStock ? (pending ? "Adding…" : "Add to cart") : "Out of stock"}
+          </Button>
+          {showCompare ? <CompareButton productId={product.id} /> : null}
+        </div>
         {failed ? (
           <p className="text-sm text-destructive">{errorMessage(addToCart.error)}</p>
         ) : null}
       </CardContent>
     </Card>
+  );
+}
+
+function CompareButton({ productId }: { productId: string }) {
+  const compare = useCompare();
+  const selected = compare.has(productId);
+  const blocked = !selected && compare.ids.length >= MAX_COMPARE;
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      className="min-w-28 flex-1"
+      disabled={blocked}
+      aria-pressed={selected}
+      onClick={() => (selected ? compare.remove(productId) : compare.add(productId))}
+    >
+      {selected ? "Comparing" : blocked ? "3 products max" : "Compare"}
+    </Button>
   );
 }

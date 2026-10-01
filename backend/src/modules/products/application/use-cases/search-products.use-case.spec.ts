@@ -36,6 +36,7 @@ describe('SearchProductsUseCase', () => {
     const repository: ProductRepository = {
       search,
       findById: vi.fn(),
+      findByCategorySlug: vi.fn(),
     };
     const useCase = new SearchProductsUseCase(repository);
 
@@ -84,6 +85,7 @@ describe('SearchProductsUseCase', () => {
     const repository: ProductRepository = {
       search,
       findById: vi.fn(),
+      findByCategorySlug: vi.fn(),
     };
     const useCase = new SearchProductsUseCase(repository);
 

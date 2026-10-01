@@ -20,6 +20,7 @@ import { ProductsController } from './presentation/products.controller.js';
     ]),
   ],
   controllers: [ProductsController],
+  exports: [PRODUCT_REPOSITORY],
   providers: [
     SearchProductsUseCase,
     GetProductUseCase,

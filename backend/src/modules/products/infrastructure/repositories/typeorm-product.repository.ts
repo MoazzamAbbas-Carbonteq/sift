@@ -68,6 +68,16 @@ export class TypeOrmProductRepository implements ProductRepository {
     return product ? toProductRecord(product) : null;
   }
 
+  async findByCategorySlug(slug: string): Promise<ProductRecord[]> {
+    const products = await this.products.find({
+      where: { category: { slug } },
+      relations: { category: true, features: true, attributes: true },
+      order: { id: 'ASC' },
+    });
+
+    return products.map(toProductRecord);
+  }
+
   private filteredQuery(criteria: ProductSearchCriteria): SelectQueryBuilder<Product> {
     const query = this.products
       .createQueryBuilder('product')

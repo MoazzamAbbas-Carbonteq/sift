@@ -41,6 +41,7 @@ describe('GetProductUseCase', () => {
     const repository: ProductRepository = {
       search: vi.fn(),
       findById: vi.fn().mockResolvedValue(product),
+      findByCategorySlug: vi.fn(),
     };
     const useCase = new GetProductUseCase(repository);
 
@@ -57,6 +58,7 @@ describe('GetProductUseCase', () => {
     const repository: ProductRepository = {
       search: vi.fn(),
       findById: vi.fn().mockResolvedValue(null),
+      findByCategorySlug: vi.fn(),
     };
     const useCase = new GetProductUseCase(repository);
 
