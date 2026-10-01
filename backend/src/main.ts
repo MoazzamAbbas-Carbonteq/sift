@@ -23,7 +23,7 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Sift API')
-    .setDescription('Catalog read API')
+    .setDescription('Catalog, cart, and order API')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
