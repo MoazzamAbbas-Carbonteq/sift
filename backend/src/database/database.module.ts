@@ -14,6 +14,7 @@ import { SnakeNamingStrategy } from './snake-naming.strategy.js';
         username: config.get<string>('DB_USER'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
+        ssl: { rejectUnauthorized: true },
         namingStrategy: new SnakeNamingStrategy(),
         autoLoadEntities: true,
         synchronize: false,

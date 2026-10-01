@@ -19,6 +19,7 @@ export const AppDataSource = new DataSource({
   username: requireEnv('DB_USER'),
   password: requireEnv('DB_PASSWORD'),
   database: requireEnv('DB_NAME'),
+  ssl: { rejectUnauthorized: true },
   namingStrategy: new SnakeNamingStrategy(),
   entities: catalogEntities,
   migrations: [CreateCatalogSchema1735689600000],
