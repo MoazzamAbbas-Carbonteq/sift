@@ -1,1 +1,11 @@
 .cursor/hooks/state/
+
+node_modules/
+dist/
+.next/
+coverage/
+*.tsbuildinfo
+
+.env
+.env.local
+.env.*.local
