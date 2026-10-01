@@ -9,6 +9,7 @@ import {
   GUEST_USER_ID,
   productId,
 } from './ids.js';
+import { productImageUrl } from './product-images.js';
 
 const CATEGORIES = [
   { id: CATEGORY_IDS.headphones, name: 'Headphones', slug: 'headphones' },
@@ -123,7 +124,7 @@ async function upsertProduct(
       item.inStock,
       item.freeShipping,
       item.returnDays,
-      `https://picsum.photos/seed/sift-${item.slug}/800/800`,
+      productImageUrl(item.slug),
       createdAt,
     ],
   );
