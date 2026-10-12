@@ -76,7 +76,7 @@ Frontend (`frontend/.env.example`):
 
 ## Deployed URL
 
-**Not deployed.** Replace this section with the public frontend URL after the app is deployed. Do not treat any local address as the live URL.
+**https://sift-omega.vercel.app/** Loading application first time might take some time due to server cold start.
 
 ## Agent logs
 
